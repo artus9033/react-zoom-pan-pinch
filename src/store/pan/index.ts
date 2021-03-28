@@ -1,6 +1,6 @@
+import { animateComponent } from "../animations";
 import { PropsList } from "../interfaces/propsInterface";
 import { checkPositionBounds, handleCalculatePositions } from "../zoom/utils";
-import { animateComponent } from "../animations";
 
 export function getClientPosition(event) {
   const { touches } = event;
@@ -24,10 +24,11 @@ export function handlePanning(event) {
     options: { limitToBounds, minScale },
     pan: { lockAxisX, lockAxisY, padding, paddingSize },
     wrapperComponent,
+    invertXY,
   } = this.stateProvider;
 
   if (!this.startCoords) return;
-  const { x, y } = this.startCoords;
+  let { x, y } = this.startCoords;
 
   const positions = getClientPosition(event);
   if (!positions) return console.error("Cannot find mouse client positions");
@@ -52,6 +53,7 @@ export function handlePanning(event) {
     limitToBounds,
     paddingValue,
     wrapperComponent,
+    invertXY,
   );
 
   // Save panned position

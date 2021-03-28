@@ -1,13 +1,13 @@
-import { roundNumber, checkIsNumber, calculateBoundingArea } from "../utils";
+import { initialState } from "../InitialState";
 import { animateComponent } from "../animations";
 import { handlePanningAnimation } from "../pan";
-import { initialState } from "../InitialState";
+import { calculateBoundingArea, checkIsNumber, roundNumber } from "../utils";
 import {
   checkZoomBounds,
   getComponentsSizes,
   getDelta,
-  wheelMousePosition,
   handleCalculatePositions,
+  wheelMousePosition,
 } from "./utils";
 
 function handleCalculateZoom(
@@ -53,9 +53,9 @@ function handleCalculateZoom(
 }
 
 export function handleCalculateBounds(newScale, limitToWrapper) {
-  const { wrapperComponent, contentComponent } = this.stateProvider;
+  const { wrapperComponent, contentComponent, invertXY } = this.stateProvider;
 
-  const {
+  let {
     wrapperWidth,
     wrapperHeight,
     newContentWidth,
@@ -63,6 +63,12 @@ export function handleCalculateBounds(newScale, limitToWrapper) {
     newContentHeight,
     newDiffHeight,
   } = getComponentsSizes(wrapperComponent, contentComponent, newScale);
+
+  if (invertXY) {
+    [wrapperWidth, wrapperHeight] = [wrapperHeight, wrapperWidth];
+    [newDiffWidth, newDiffHeight] = [newDiffHeight, newDiffWidth];
+    [newContentWidth, newContentHeight] = [newContentHeight, newContentWidth];
+  }
 
   const bounds = calculateBoundingArea(
     wrapperWidth,
@@ -89,25 +95,27 @@ export function handleWheelZoom(event) {
     options: { limitToBounds },
     scalePadding: { size, disabled },
     wheel: { step, limitsOnWheel },
+    invertXY,
   } = this.stateProvider;
 
   event.preventDefault();
   event.stopPropagation();
 
   const delta = getDelta(event, null);
-  const newScale = handleCalculateZoom.call(this, delta, step, !event.ctrlKey);
+  let newScale = handleCalculateZoom.call(this, delta, step, !event.ctrlKey);
 
   // if scale not change
   if (scale === newScale) return;
+  else if (invertXY) newScale = scale + (newScale - scale) * 10;
 
   const bounds = handleCalculateBounds.call(this, newScale, !limitsOnWheel);
 
-  const { mouseX, mouseY } = wheelMousePosition(event, contentComponent, scale);
+  let { mouseX, mouseY } = wheelMousePosition(event, contentComponent, scale);
 
   const isLimitedToBounds =
     limitToBounds && (disabled || size === 0 || limitsOnWheel);
 
-  const { x, y } = handleCalculatePositions.call(
+  let { x, y } = handleCalculatePositions.call(
     this,
     mouseX,
     mouseY,
@@ -132,6 +140,7 @@ export function handleZoomToPoint(isDisabled, scale, mouseX, mouseY, event) {
   const {
     contentComponent,
     options: { disabled, minScale, maxScale, limitToBounds, limitToWrapper },
+    invertXY,
   } = this.stateProvider;
   if (disabled || isDisabled) return;
 
@@ -147,6 +156,8 @@ export function handleZoomToPoint(isDisabled, scale, mouseX, mouseY, event) {
   let mousePosX = mouseX;
   let mousePosY = mouseY;
 
+  if (invertXY) [mouseX, mouseY] = [mouseY, mouseX];
+
   // if event is present - use it's mouse position
   if (event) {
     const mousePosition = wheelMousePosition(event, contentComponent, scale);
@@ -154,7 +165,7 @@ export function handleZoomToPoint(isDisabled, scale, mouseX, mouseY, event) {
     mousePosY = mousePosition.mouseY;
   }
 
-  const { x, y } = handleCalculatePositions.call(
+  let { x, y } = handleCalculatePositions.call(
     this,
     mousePosX,
     mousePosY,
@@ -162,6 +173,8 @@ export function handleZoomToPoint(isDisabled, scale, mouseX, mouseY, event) {
     bounds,
     limitToBounds,
   );
+
+  if (invertXY) [x, y] = [y, x];
 
   return { scale: newScale, positionX: x, positionY: y };
 }

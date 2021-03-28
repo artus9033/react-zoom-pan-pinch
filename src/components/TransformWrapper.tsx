@@ -1,8 +1,9 @@
 import React from "react";
+
 import { StateProvider } from "../store/StateContext";
-import { deleteUndefinedProps } from "../store/utils";
-import { getValidPropsFromObject } from "../store/propsHandlers";
 import { PropsList } from "../store/interfaces/propsInterface";
+import { getValidPropsFromObject } from "../store/propsHandlers";
+import { deleteUndefinedProps } from "../store/utils";
 
 const TransformWrapper = ({
   children,
@@ -22,6 +23,7 @@ const TransformWrapper = ({
   ...rest
 }: PropsList) => {
   const props = { ...rest };
+
   if (props.options && props.options.limitToWrapper) {
     props.options.limitToBounds = true;
   }

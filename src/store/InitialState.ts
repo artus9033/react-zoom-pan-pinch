@@ -1,4 +1,5 @@
 export const initialState = {
+  invertXY: false,
   wrapperComponent: null,
   contentComponent: null,
   previousScale: 1,

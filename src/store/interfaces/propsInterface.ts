@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 export interface PropsList {
+  invertXY: boolean;
   scale?: number;
   positionX?: number;
   positionY?: number;

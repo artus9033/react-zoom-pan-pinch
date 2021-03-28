@@ -1,4 +1,5 @@
 export const propsList = [
+  "invertXY",
   "previousScale",
   "scale",
   "positionX",
@@ -27,7 +28,7 @@ export const propsList = [
   "reset",
 ];
 
-export const getValidPropsFromObject = props => {
+export const getValidPropsFromObject = (props) => {
   return Object.keys(props).reduce((acc, key) => {
     if (propsList.includes(key)) {
       acc[key] = props[key];
