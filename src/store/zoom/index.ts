@@ -156,8 +156,6 @@ export function handleZoomToPoint(isDisabled, scale, mouseX, mouseY, event) {
   let mousePosX = mouseX;
   let mousePosY = mouseY;
 
-  if (invertXY) [mouseX, mouseY] = [mouseY, mouseX];
-
   // if event is present - use it's mouse position
   if (event) {
     const mousePosition = wheelMousePosition(event, contentComponent, scale);
@@ -174,9 +172,11 @@ export function handleZoomToPoint(isDisabled, scale, mouseX, mouseY, event) {
     limitToBounds,
   );
 
-  if (invertXY) [x, y] = [y, x];
-
-  return { scale: newScale, positionX: x, positionY: y };
+  return {
+    scale: newScale,
+    positionX: invertXY ? y : x,
+    positionY: invertXY ? x : y,
+  };
 }
 
 export function handlePaddingAnimation() {
@@ -185,6 +185,7 @@ export function handlePaddingAnimation() {
     wrapperComponent,
     options: { minScale, limitToBounds },
     scalePadding: { disabled, animationTime, animationType },
+    invertXY,
   } = this.stateProvider;
   const isDisabled = disabled || scale >= minScale;
 
@@ -196,6 +197,8 @@ export function handlePaddingAnimation() {
   if (isDisabled) return;
   let mouseX = wrapperComponent.offsetWidth / 2;
   let mouseY = wrapperComponent.offsetHeight / 2;
+
+  if (invertXY) [mouseX, mouseY] = [mouseY, mouseX];
 
   const targetState = handleZoomToPoint.call(
     this,

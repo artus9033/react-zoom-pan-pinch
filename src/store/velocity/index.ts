@@ -101,7 +101,7 @@ export function animateVelocity() {
   const startTime = new Date().getTime();
 
   // animation start timestamp
-  animate.call(this, velocityAnimationType, newAnimationTime, step => {
+  animate.call(this, velocityAnimationType, newAnimationTime, (step) => {
     const frameTime = new Date().getTime() - startTime;
     const animationProgress = frameTime / panReturnAnimationTime;
     const returnAnimation = availableAnimations[panReturnAnimationType];

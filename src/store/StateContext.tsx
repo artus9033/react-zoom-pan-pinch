@@ -279,7 +279,7 @@ class StateProvider extends Component<StateContextProps, StateContextState> {
   };
 
   handleSetUpPanning = (x, y) => {
-    if (this.stateProvider.invertXY) [x, y] = [y, x];
+    //if (this.stateProvider.invertXY) [x, y] = [y, x];
     const { positionX, positionY } = this.stateProvider;
     this.isDown = true;
     this.startCoords = { x: x - positionX, y: y - positionY };
@@ -294,6 +294,7 @@ class StateProvider extends Component<StateContextProps, StateContextState> {
       options: { minScale, maxScale, limitToWrapper },
       pan: { disabled },
     } = this.stateProvider;
+
     const { target, touches } = event;
 
     if (

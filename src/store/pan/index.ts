@@ -7,11 +7,17 @@ export function getClientPosition(event) {
 
   // Mobile points
   if (touches && touches.length === 1) {
-    return { clientX: touches[0].clientX, clientY: touches[0].clientY };
+    return {
+      clientX: touches[0].clientX,
+      clientY: touches[0].clientY,
+    };
   }
   // Desktop points
   if (!touches) {
-    return { clientX: event.clientX, clientY: event.clientY };
+    return {
+      clientX: event.clientX,
+      clientY: event.clientY,
+    };
   }
   return null;
 }
@@ -53,8 +59,9 @@ export function handlePanning(event) {
     limitToBounds,
     paddingValue,
     wrapperComponent,
-    invertXY,
   );
+
+  console.log(calculatedPosition);
 
   // Save panned position
   handlePaddingAnimation.call(this, calculatedPosition.x, calculatedPosition.y);
