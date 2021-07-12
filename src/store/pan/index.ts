@@ -30,7 +30,6 @@ export function handlePanning(event) {
     options: { limitToBounds, minScale },
     pan: { lockAxisX, lockAxisY, padding, paddingSize },
     wrapperComponent,
-    invertXY,
   } = this.stateProvider;
 
   if (!this.startCoords) return;
@@ -60,8 +59,6 @@ export function handlePanning(event) {
     paddingValue,
     wrapperComponent,
   );
-
-  console.log(calculatedPosition);
 
   // Save panned position
   handlePaddingAnimation.call(this, calculatedPosition.x, calculatedPosition.y);
