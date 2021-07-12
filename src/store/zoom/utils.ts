@@ -23,7 +23,6 @@ export function checkPositionBounds(
   limitToBounds,
   paddingValue,
   wrapperComponent,
-  invertXY = false,
 ) {
   const { minPositionX, minPositionY, maxPositionX, maxPositionY } = bounds;
   const paddingX = wrapperComponent
@@ -46,8 +45,6 @@ export function checkPositionBounds(
     maxPositionY + paddingY,
     limitToBounds,
   );
-
-  if (invertXY) [x, y] = [y, x];
 
   return { x, y };
 }
